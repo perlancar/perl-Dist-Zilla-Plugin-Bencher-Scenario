@@ -1,5 +1,6 @@
 Revision history for Dist-Zilla-Plugin-Bencher-Scenario
 
-0.01    2015-11-18 (PERLANCAR) (unreleased)
+0.01    2015-11-18 (PERLANCAR)
 
-        - First release.
+        - First, early release. Currently what it does is just add the
+          benchmarked modules to RuntimeRecommends.
