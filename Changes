@@ -1,5 +1,15 @@
 Revision history for Dist-Zilla-Plugin-Bencher-Scenario
 
+0.02    2015-11-19 (PERLANCAR)
+
+        - Upgrade dependencies of benchmarked modules from RuntimeRecommends to
+          RuntimeRequires because we need them when running benchmark in
+          testing.
+
+        - Add TestRequires prereq to Bencher, add test files t/bench-*.t to run
+          benchmarks during testing.
+
+
 0.01    2015-11-18 (PERLANCAR)
 
         - First, early release. Currently what it does is just add the

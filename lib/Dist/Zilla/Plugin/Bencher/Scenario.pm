@@ -103,7 +103,7 @@ L<Bencher::Scenario::Serializers>). Currently what it does are the following:
 
 =over
 
-=item * Add the benchmarked modules as RuntimeRecommends prereqs
+=item * Add the benchmarked modules as RuntimeRequires prereqs
 
 =item * Add Bencher to TestRequires prereq and add test files C<t/bench.t-*>
 
