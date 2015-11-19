@@ -76,7 +76,7 @@ sub munge_files {
             next if $seen_mods{$mod}++;
             $self->log_debug(["Adding prereq to benchmarked module %s", $mod]);
             $self->zilla->register_prereqs(
-                {phase=>'runtime', type=>'recommends'}, $mod, 0);
+                {phase=>'runtime', type=>'requires'}, $mod, 0);
         }
     }
     return;
