@@ -56,7 +56,7 @@ done_testing();
           );
     }
     $self->zilla->register_prereqs(
-        {phase=>'test', type=>'requires'}, 'Bencher', '0.12');
+        {phase=>'test', type=>'requires'}, 'Bencher', '0.15');
 }
 
 sub munge_files {
@@ -74,9 +74,12 @@ sub munge_files {
         my @modules = Bencher::_get_participant_modules($scenario);
         for my $mod (@modules) {
             next if $seen_mods{$mod}++;
-            $self->log_debug(["Adding prereq to benchmarked module %s", $mod]);
+            my $ver = $scenario->{modules}{$mod}{version} // 0;
+            $self->log_debug(
+                ["Adding prereq to benchmarked module %s (version %s)",
+                 $mod, $ver]);
             $self->zilla->register_prereqs(
-                {phase=>'runtime', type=>'requires'}, $mod, 0);
+                {phase=>'runtime', type=>'requires'}, $mod, $ver);
         }
     }
     return;
