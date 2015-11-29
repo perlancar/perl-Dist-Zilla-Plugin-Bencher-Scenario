@@ -1,5 +1,11 @@
 Revision history for Dist-Zilla-Plugin-Bencher-Scenario
 
+0.03    2015-11-29 (PERLANCAR)
+
+	- Add prereq version from scenario's 'modules'->MODULE->'version'
+	  property.
+
+
 0.02    2015-11-19 (PERLANCAR)
 
         - Upgrade dependencies of benchmarked modules from RuntimeRecommends to
