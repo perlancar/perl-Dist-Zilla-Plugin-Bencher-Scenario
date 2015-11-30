@@ -39,8 +39,9 @@ sub gather_files {
 
 use Test::More;
 
-eval "use Bencher 0.12";
-plan skip_all => "Bencher 0.12 required to run benchmark" if $@;
+eval "use Bencher 0.15";
+plan skip_all => "Bencher 0.15 required to run benchmark" if $@;
+plan skip_all => "EXTENDED_TESTING not turned on" unless $ENV{EXTENDED_TESTING};
 
 diag explain Bencher::bencher(action=>'bench', scenario_module=>'].$bs_name.q[');
 ok 1;
