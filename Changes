@@ -1,5 +1,10 @@
 Revision history for Dist-Zilla-Plugin-Bencher-Scenario
 
+0.04    2015-11-30 (PERLANCAR)
+
+	- Only run bench tests when EXTENDED_TESTING is turned on.
+
+
 0.03    2015-11-29 (PERLANCAR)
 
 	- Add prereq version from scenario's 'modules'->MODULE->'version'
