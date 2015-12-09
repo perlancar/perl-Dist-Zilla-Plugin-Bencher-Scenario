@@ -1,5 +1,12 @@
 Revision history for Dist-Zilla-Plugin-Bencher-Scenario
 
+0.06    2015-12-09 (PERLANCAR)
+
+	- No functional changes.
+
+	- Bump prereq Bencher version 0.15 -> 0.17 in built dist (hooks).
+
+
 0.05    2015-12-09 (PERLANCAR)
 
 	- Fill-in #ABSTRACT from scenario's summary.
