@@ -111,8 +111,8 @@ sub gather_files {
 
 use Test::More;
 
-eval "use Bencher 0.15";
-plan skip_all => "Bencher 0.15 required to run benchmark" if $@;
+eval "use Bencher 0.17";
+plan skip_all => "Bencher 0.17 required to run benchmark" if $@;
 plan skip_all => "EXTENDED_TESTING not turned on" unless $ENV{EXTENDED_TESTING};
 
 diag explain Bencher::bencher(action=>'bench', scenario_module=>'].$bs_name.q[');
@@ -129,7 +129,7 @@ done_testing();
           );
     }
     $self->zilla->register_prereqs(
-        {phase=>'test', type=>'requires'}, 'Bencher', '0.15');
+        {phase=>'test', type=>'requires'}, 'Bencher', '0.17');
 }
 
 sub munge_files {
