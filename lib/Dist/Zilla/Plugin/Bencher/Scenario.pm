@@ -11,15 +11,87 @@ use Moose;
 use namespace::autoclean;
 
 use Bencher;
+use File::Spec::Functions qw(catfile);
 use Module::Load;
 
 with (
+    'Dist::Zilla::Role::BeforeBuild',
     'Dist::Zilla::Role::FileGatherer',
     'Dist::Zilla::Role::FileMunger',
     'Dist::Zilla::Role::FileFinderUser' => {
         default_finders => [':InstallModules'],
     },
 );
+
+# either provide filename or filename+filecontent
+sub _get_abstract_from_scenario {
+    my ($self, $filename, $filecontent) = @_;
+
+    local @INC = @INC;
+    unshift @INC, 'lib';
+
+    unless (defined $filecontent) {
+        $filecontent = do {
+            open my($fh), "<", $filename or die "Can't open $filename: $!";
+            local $/;
+            ~~<$fh>;
+        };
+    }
+
+    unless ($filecontent =~ m{^#[ \t]*ABSTRACT:[ \t]*([^\n]*)[ \t]*$}m) {
+        $self->log_debug(["Skipping %s: no # ABSTRACT", $filename]);
+        return undef;
+    }
+
+    my $abstract = $1;
+    if ($abstract =~ /\S/) {
+        $self->log_debug(["Skipping %s: Abstract already filled (%s)", $filename, $abstract]);
+        return $abstract;
+    }
+
+    $self->log_debug(["Getting abstract for module %s", $filename]);
+    my $pkg;
+    if (!defined($filecontent)) {
+        (my $mod_p = $filename) =~ s!^lib/!!;
+        require $mod_p;
+
+        # find out the package of the file
+        ($pkg = $mod_p) =~ s/\.pm\z//; $pkg =~ s!/!::!g;
+    } else {
+        eval $filecontent;
+        die if $@;
+        if ($filecontent =~ /\bpackage\s+(\w+(?:::\w+)*)/s) {
+            $pkg = $1;
+        } else {
+            die "Can't extract package name from file content";
+        }
+    }
+
+    no strict 'refs';
+    my $scenario = ${"$pkg\::scenario"};
+
+    $scenario->{summary};
+}
+
+# dzil also wants to get abstract for main module to put in dist's
+# META.{yml,json}
+sub before_build {
+    my $self  = shift;
+    my $name  = $self->zilla->name;
+    my $class = $name; $class =~ s{ [\-] }{::}gmx;
+    my $filename = $self->zilla->_main_module_override ||
+        catfile( 'lib', split m{ [\-] }mx, "${name}.pm" );
+
+    $filename or die 'No main module specified';
+    -f $filename or die "Path ${filename} does not exist or not a file";
+    open my $fh, '<', $filename or die "File ${filename} cannot open: $!";
+
+    my $abstract = $self->_get_abstract_from_scenario($filename);
+    return unless $abstract;
+
+    $self->zilla->abstract($abstract);
+    return;
+}
 
 sub gather_files {
     require Dist::Zilla::File::InMemory;
@@ -69,6 +141,8 @@ sub munge_files {
     my %seen_mods;
     for my $file (@{ $self->found_files }) {
         next unless $file->name =~ m!\Alib/(Bencher/Scenario/.+)\.pm\z!;
+
+        # add prereq to participant modules
         my $pkg = $1; $pkg =~ s!/!::!g;
         load $pkg;
         my $scenario = Bencher::parse_scenario(scenario=>${"$pkg\::scenario"});
@@ -82,7 +156,21 @@ sub munge_files {
             $self->zilla->register_prereqs(
                 {phase=>'runtime', type=>'requires'}, $mod, $ver);
         }
-    }
+
+        # fill-in ABSTRACT from scenario's summary
+        my $content = $file->content;
+        {
+            my $abstract = $self->_get_abstract_from_scenario(
+                $file->name, $content);
+            last unless $abstract;
+            $content =~ s{^#\s*ABSTRACT:.*}{# ABSTRACT: $abstract}m
+                or die "Can't insert abstract for " . $file->name;
+            $self->log(["inserting abstract for %s (%s)",
+                        $file->name, $abstract]);
+
+            $file->content($content);
+        }
+    } # foreach file
     return;
 }
 
@@ -110,6 +198,8 @@ L<Bencher::Scenario::Serializers>). Currently what it does are the following:
 =item * Add the benchmarked modules as RuntimeRequires prereqs
 
 =item * Add Bencher to TestRequires prereq and add test files C<t/bench.t-*>
+
+=item * Fill-in ABSTRACT from scenario's summary
 
 =back
 
