@@ -1,5 +1,10 @@
 Revision history for Dist-Zilla-Plugin-Bencher-Scenario
 
+0.05    2015-12-09 (PERLANCAR)
+
+	- Fill-in #ABSTRACT from scenario's summary.
+
+
 0.04    2015-11-30 (PERLANCAR)
 
 	- Only run bench tests when EXTENDED_TESTING is turned on.
