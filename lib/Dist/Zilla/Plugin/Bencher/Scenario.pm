@@ -14,6 +14,9 @@ use Bencher;
 use File::Spec::Functions qw(catfile);
 use Module::Load;
 
+# we need the version to insert to generated test scripts, prereqs.
+$Bencher::VERSION or die "Please use Bencher with a version number";
+
 with (
     'Dist::Zilla::Role::BeforeBuild',
     'Dist::Zilla::Role::FileGatherer',
@@ -111,8 +114,8 @@ sub gather_files {
 
 use Test::More;
 
-eval "use Bencher 0.19";
-plan skip_all => "Bencher 0.19 required to run benchmark" if $@;
+eval "use Bencher ].$Bencher::VERSION.q[";
+plan skip_all => "Bencher ].$Bencher::VERSION.q[ required to run benchmark" if $@;
 plan skip_all => "EXTENDED_TESTING not turned on" unless $ENV{EXTENDED_TESTING};
 
 diag explain Bencher::bencher(action=>'bench', scenario_module=>'].$bs_name.q[');
@@ -129,7 +132,7 @@ done_testing();
           );
     }
     $self->zilla->register_prereqs(
-        {phase=>'test', type=>'requires'}, 'Bencher', '0.19');
+        {phase=>'test', type=>'requires'}, 'Bencher', $Bencher::VERSION);
 }
 
 sub munge_files {
