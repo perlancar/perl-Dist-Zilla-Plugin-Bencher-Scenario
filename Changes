@@ -1,5 +1,12 @@
 Revision history for Dist-Zilla-Plugin-Bencher-Scenario
 
+0.10    2016-01-13 (PERLANCAR)
+
+	- No functional changes.
+
+	- Tweak Abstract & Description.
+
+
 0.09    2016-01-07 (PERLANCAR)
 
 	- Use the installed version of Bencher instead of a certain fixed
