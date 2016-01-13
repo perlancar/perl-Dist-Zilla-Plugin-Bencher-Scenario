@@ -179,7 +179,7 @@ sub munge_files {
 
 __PACKAGE__->meta->make_immutable;
 1;
-# ABSTRACT: Do various stuffs for Bencher-Scenario-* distribution
+# ABSTRACT: Plugin to use when building Bencher::Scenario::* distribution
 
 =for Pod::Coverage .+
 
@@ -192,15 +192,14 @@ In F<dist.ini>:
 
 =head1 DESCRIPTION
 
-This plugin is meant to be use when building C<Bencher-Scenario-*> distribution
-(e.g.: L<Bencher::Scenario::SetOperationModules>,
-L<Bencher::Scenario::Serializers>). Currently what it does are the following:
+This plugin is to be used when building C<Bencher::Scenario::*> distribution.
+It currently dos the following:
 
 =over
 
 =item * Add the benchmarked modules as RuntimeRequires prereqs
 
-=item * Add Bencher to TestRequires prereq and add test files C<t/bench.t-*>
+=item * Add Bencher (the currently installed version during building) to TestRequires prereq and add test files C<t/bench.t-*>
 
 =item * Fill-in ABSTRACT from scenario's summary
 
