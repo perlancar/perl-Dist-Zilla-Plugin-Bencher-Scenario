@@ -10,12 +10,12 @@ use warnings;
 use Moose;
 use namespace::autoclean;
 
-use Bencher;
+use Bencher::Backend;
 use File::Spec::Functions qw(catfile);
 use Module::Load;
 
 # we need the version to insert to generated test scripts, prereqs.
-$Bencher::VERSION or die "Please use Bencher with a version number";
+$Bencher::Backend::VERSION or die "Please use Bencher with a version number";
 
 with (
     'Dist::Zilla::Role::BeforeBuild',
@@ -114,11 +114,11 @@ sub gather_files {
 
 use Test::More;
 
-eval "use Bencher ].$Bencher::VERSION.q[";
-plan skip_all => "Bencher ].$Bencher::VERSION.q[ required to run benchmark" if $@;
+eval "use Bencher::Backend ].$Bencher::VERSION.q[";
+plan skip_all => "Bencher::Backend ].$Bencher::VERSION.q[ required to run benchmark" if $@;
 plan skip_all => "EXTENDED_TESTING not turned on" unless $ENV{EXTENDED_TESTING};
 
-diag explain Bencher::bencher(action=>'bench', scenario_module=>'].$bs_name.q[');
+diag explain Bencher::Backend::bencher(action=>'bench', return_meta=>1, scenario_module=>'].$bs_name.q[');
 ok 1;
 
 done_testing();
@@ -132,7 +132,7 @@ done_testing();
           );
     }
     $self->zilla->register_prereqs(
-        {phase=>'test', type=>'requires'}, 'Bencher', $Bencher::VERSION);
+        {phase=>'test', type=>'requires'}, 'Bencher::Backend', $Bencher::Backend::VERSION);
 }
 
 sub munge_files {
@@ -148,8 +148,8 @@ sub munge_files {
         # add prereq to participant modules
         my $pkg = $1; $pkg =~ s!/!::!g;
         load $pkg;
-        my $scenario = Bencher::parse_scenario(scenario=>${"$pkg\::scenario"});
-        my @modules = Bencher::_get_participant_modules($scenario);
+        my $scenario = Bencher::Backend::parse_scenario(scenario=>${"$pkg\::scenario"});
+        my @modules = Bencher::Backend::_get_participant_modules($scenario);
         for my $mod (@modules) {
             next if $seen_mods{$mod}++;
             my $ver = $scenario->{modules}{$mod}{version} // 0;
@@ -199,7 +199,7 @@ It currently dos the following:
 
 =item * Add the benchmarked modules as RuntimeRequires prereqs
 
-=item * Add Bencher (the currently installed version during building) to TestRequires prereq and add test files C<t/bench.t-*>
+=item * Add Bencher::Backend (the currently installed version during building) to TestRequires prereq and add test files C<t/bench.t-*>
 
 =item * Fill-in ABSTRACT from scenario's summary
 
