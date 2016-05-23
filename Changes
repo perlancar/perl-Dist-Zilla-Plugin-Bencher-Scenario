@@ -1,5 +1,11 @@
 Revision history for Dist-Zilla-Plugin-Bencher-Scenario
 
+0.12    2016-05-23 (PERLANCAR)
+
+	- [Bugfix] Don't add prereq to participant module if the module is
+	  in current distro.
+
+
 0.11    2016-03-15 (PERLANCAR)
 
 	- Adjust to Bencher 0.38 (backend split to Bencher::Backend).
