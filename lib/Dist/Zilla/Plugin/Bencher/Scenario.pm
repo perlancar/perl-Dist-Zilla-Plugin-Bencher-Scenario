@@ -141,6 +141,14 @@ sub munge_files {
 
     local @INC = ("lib", @INC);
 
+    # gather dist modules
+    my %distmodules;
+    for my $file (@{ $self->found_files }) {
+        next unless $file->name =~ m!\Alib/(.+)\.pm\z!;
+        my $mod = $1; $mod =~ s!/!::!g;
+        $distmodules{$mod}++;
+    }
+
     my %seen_mods;
     for my $file (@{ $self->found_files }) {
         next unless $file->name =~ m!\Alib/(Bencher/Scenario/.+)\.pm\z!;
@@ -151,6 +159,7 @@ sub munge_files {
         my $scenario = Bencher::Backend::parse_scenario(scenario=>${"$pkg\::scenario"});
         my @modules = Bencher::Backend::_get_participant_modules($scenario);
         for my $mod (@modules) {
+            next if $distmodules{$mod};
             next if $seen_mods{$mod}++;
             my $ver = $scenario->{modules}{$mod}{version} // 0;
             $self->log_debug(
