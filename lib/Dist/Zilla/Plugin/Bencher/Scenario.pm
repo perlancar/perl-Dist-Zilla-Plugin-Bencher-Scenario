@@ -152,7 +152,6 @@ sub munge_files {
         $distmodules{$mod}++;
     }
 
-    my %seen_mods;
     for my $file (@{ $self->found_files }) {
         next unless $file->name =~ m!\Alib/(Bencher/Scenario/.+)\.pm\z!;
 
@@ -163,11 +162,10 @@ sub munge_files {
         my @modules = Bencher::Backend::_get_participant_modules($scenario);
         for my $mod (@modules) {
             next if $distmodules{$mod};
-            next if $seen_mods{$mod}++;
             my $ver = $scenario->{modules}{$mod}{version} // 0;
             $self->log_debug(
-                ["Adding prereq to benchmarked module %s (version %s)",
-                 $mod, $ver]);
+                ["(scenario %s) Adding prereq to benchmarked module %s (version %s)",
+                 $pkg, $mod, $ver]);
             $self->zilla->register_prereqs(
                 {phase=>'runtime', type=>'requires'}, $mod, $ver);
         }
