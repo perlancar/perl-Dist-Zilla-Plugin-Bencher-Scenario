@@ -2,8 +2,9 @@ Revision history for Dist-Zilla-Plugin-Bencher-Scenario
 
 0.14    2016-10-04 (PERLANCAR)
 
-	- [Bugfix] Process all participant modules, don't skip once it has
-	  been seen because other scenarios might require a higher version.
+	- [Bugfix] When registering prereqs, process all participant modules:
+	  don't skip once a module has been seen because other scenarios might
+	  require a higher version of that module.
 
 
 0.13    2016-07-13 (PERLANCAR)
