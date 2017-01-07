@@ -1,5 +1,3 @@
-Revision history for Dist-Zilla-Plugin-Bencher-Scenario
-
 0.14    2016-10-04 (PERLANCAR)
 
 	- [Bugfix] When registering prereqs, process all participant modules:
