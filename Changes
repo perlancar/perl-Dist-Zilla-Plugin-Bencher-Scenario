@@ -1,3 +1,9 @@
+0.15    2017-01-25 (PERLANCAR)
+
+	- Also add benchmarked modules as prereq with phase=x_benchmarks,
+	  type=requires.
+
+
 0.14    2016-10-04 (PERLANCAR)
 
 	- [Bugfix] When registering prereqs, process all participant modules:
