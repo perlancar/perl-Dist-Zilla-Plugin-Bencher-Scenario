@@ -1,3 +1,9 @@
+0.16    2017-01-25 (PERLANCAR)
+
+        - Add prereq phase=x_benchmarks rel=x_benchmarks to benchmarked modules,
+          add prereqs to helper modules.
+
+
 0.15    2017-01-25 (PERLANCAR)
 
 	- Also add benchmarked modules as prereq with phase=x_benchmarks,
