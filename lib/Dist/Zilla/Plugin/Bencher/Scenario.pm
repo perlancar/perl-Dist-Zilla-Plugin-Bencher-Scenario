@@ -160,11 +160,25 @@ sub munge_files {
         load $pkg;
         my $scenario = Bencher::Backend::parse_scenario(scenario=>${"$pkg\::scenario"});
         my @modules = Bencher::Backend::_get_participant_modules($scenario);
+        my @helper_modules = Bencher::Backend::_get_participant_helper_modules($scenario);
         for my $mod (@modules) {
             next if $distmodules{$mod};
             my $ver = $scenario->{modules}{$mod}{version} // 0;
             $self->log_debug(
-                ["(scenario %s) Adding prereq to benchmarked module %s (version %s)",
+                ["(scenario %s) Adding prereqs to benchmarked module %s (version %s)",
+                 $pkg, $mod, $ver]);
+            $self->zilla->register_prereqs(
+                {phase=>'runtime', type=>'requires'}, $mod, $ver);
+            $self->zilla->register_prereqs(
+                {phase=>'x_benchmarks', type=>'x_benchmarks'}, $mod, $ver);
+            $self->zilla->register_prereqs(
+                {phase=>'x_benchmarks', type=>'requires'}, $mod, $ver);
+        }
+        for my $mod (@helper_modules) {
+            next if $distmodules{$mod};
+            my $ver = $scenario->{modules}{$mod}{version} // 0;
+            $self->log_debug(
+                ["(scenario %s) Adding prereqs to helper module %s (version %s)",
                  $pkg, $mod, $ver]);
             $self->zilla->register_prereqs(
                 {phase=>'runtime', type=>'requires'}, $mod, $ver);
@@ -229,9 +243,9 @@ It currently dos the following:
 
 =over
 
-=item * Add the benchmarked modules as phase=x_benchmarks rel=requires prereqs
+=item * Add the benchmarked + helper modules as phase=x_benchmarks rel=requires prereqs (as well as phase=runtime rel=requires for installation convenience)
 
-=item * Add the benchmarked modules as RuntimeRequires prereqs, for installation convenience
+=item * Add the benchmarked modules as phase=x_benchmarks rel=x_benchmarks prereqs
 
 =item * Add Bencher::Backend (the currently installed version during building) to TestRequires prereq and add test files C<t/bench.t-*>
 
