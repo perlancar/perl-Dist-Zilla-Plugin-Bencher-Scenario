@@ -168,6 +168,8 @@ sub munge_files {
                  $pkg, $mod, $ver]);
             $self->zilla->register_prereqs(
                 {phase=>'runtime', type=>'requires'}, $mod, $ver);
+            $self->zilla->register_prereqs(
+                {phase=>'x_benchmarks', type=>'requires'}, $mod, $ver);
         }
 
         # fill-in ABSTRACT from scenario's summary
@@ -227,7 +229,9 @@ It currently dos the following:
 
 =over
 
-=item * Add the benchmarked modules as RuntimeRequires prereqs
+=item * Add the benchmarked modules as phase=x_benchmarks rel=requires prereqs
+
+=item * Add the benchmarked modules as RuntimeRequires prereqs, for installation convenience
 
 =item * Add Bencher::Backend (the currently installed version during building) to TestRequires prereq and add test files C<t/bench.t-*>
 
