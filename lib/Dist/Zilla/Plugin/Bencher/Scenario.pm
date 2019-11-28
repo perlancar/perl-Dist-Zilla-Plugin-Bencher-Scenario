@@ -257,7 +257,7 @@ In F<dist.ini>:
 
 This plugin is to be used when building C<Bencher::Scenario::*> distribution. It
 can also be used for C<Acme::CPANModules::*> distribution that contains
-benchmarking information. It currently dos the following:
+benchmarking information. It currently does the following:
 
 =over
 
