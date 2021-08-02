@@ -2,3 +2,4 @@ Dist-Zilla-Plugin-Bencher-Scenario-*
 .build
 *~
 nytprof*
+.DS_Store
