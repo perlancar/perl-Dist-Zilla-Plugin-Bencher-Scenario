@@ -1,8 +1,5 @@
 package Dist::Zilla::Plugin::Bencher::Scenario;
 
-# DATE
-# VERSION
-
 use 5.010001;
 use strict;
 use warnings;
@@ -16,6 +13,11 @@ use File::Slurper qw(read_binary);
 use File::Spec::Functions qw(catfile);
 use Module::Load;
 use PMVersions::Util qw(version_from_pmversions);
+
+# AUTHORITY
+# DATE
+# DIST
+# VERSION
 
 # we need the version to insert to generated test scripts, prereqs.
 $Bencher::Backend::VERSION or die "Please use Bencher with a version number";
